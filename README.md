@@ -1,1 +1,0 @@
-# backup_pingeso_2023
