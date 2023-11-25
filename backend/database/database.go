@@ -12,10 +12,10 @@ func ConexionDB() (conexion *sql.DB) {
 	Usuario := "root"
 	Contrasenia := "mysql"
 	Nombre := "bd_test1"
-	Tipo_conexion := "127.0.0.1"
+	// Tipo_conexion := "127.0.0.1"
 
 	// Cadena de conexión
-	cadenaConexion := fmt.Sprintf("%s:%s@tcp(%s:3306)/", Usuario, Contrasenia, Tipo_conexion)
+	cadenaConexion := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/", Usuario, Contrasenia)
 
 	conexion, err := sql.Open(Driver, cadenaConexion)
 
@@ -41,7 +41,8 @@ func ConexionDB() (conexion *sql.DB) {
 		description TEXT,
 		state VARCHAR(255),
 		id_user INT NOT NULL,
-		id_wp_term INT NOT NULL
+		id_wp_term INT NOT NULL,
+		last_approval VARCHAR(255)
 	)`)
 	if err != nil {
 		panic(err.Error())
@@ -70,28 +71,42 @@ func ConexionDB() (conexion *sql.DB) {
 	if err != nil {
 		panic(err.Error())
 	}
-	_, err = conexion.Exec(`CREATE TABLE IF NOT EXISTS user (
-		id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-		name VARCHAR(255) NOT NULL,
-		rut VARCHAR(255) NOT NULL,
-		email VARCHAR(255) NOT NULL,
-		password VARCHAR(255) NOT NULL,
-		role VARCHAR(255) NOT NULL,
-	)`)
-	if err != nil {
-		panic(err.Error())
-	}
+	// _, err = conexion.Exec(`CREATE TABLE IF NOT EXISTS user (
+	// 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	// 	name VARCHAR(255) NOT NULL,
+	// 	rut VARCHAR(255) NOT NULL,
+	// 	email VARCHAR(255) NOT NULL,
+	// 	password VARCHAR(255) NOT NULL,
+	// 	role VARCHAR(255) NOT NULL,
+	// )`)
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
 	return conexion
 }
+
+// func ConexionDBWP() (conexion *sql.DB) {
+// 	Driver := "mysql"
+// 	Usuario := "root"
+// 	Contrasenia := "mysql"
+// 	Nombre := "test_usachatiendebd"
+// 	// Tipo_conexion := "127.0.0.1"
+// 	// Cadena de conexión
+// 	cadenaConexion := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3333)/%s", Usuario, Contrasenia, Nombre)
+// 	conexion, err := sql.Open(Driver, cadenaConexion)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	return conexion
+// }
 
 func ConexionDBWP() (conexion *sql.DB) {
 	Driver := "mysql"
 	Usuario := "root"
-	Contrasenia := "mysql"
+	Contrasenia := ""
 	Nombre := "test_usachatiendebd"
-	Tipo_conexion := "127.0.0.1"
 	// Cadena de conexión
-	cadenaConexion := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", Usuario, Contrasenia, Tipo_conexion, Nombre)
+	cadenaConexion := fmt.Sprintf("%s:%s@tcp(localhost:3333)/%s", Usuario, Contrasenia, Nombre)
 	conexion, err := sql.Open(Driver, cadenaConexion)
 	if err != nil {
 		panic(err.Error())
