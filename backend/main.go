@@ -50,13 +50,13 @@ func main() {
 	// router.DELETE("/categories/:id", controllers.DeleteCategory)
 	// router.GET("/categoriesByTerm/:id", controllers.GetCategoriesByTerm)
 
-	// router.GET("/informations", controllers.GetInformations)
-	// router.GET("/informations/:id", controllers.GetInformation)
-	// router.POST("/information", controllers.CreateInformation)
-	// router.PUT("/informations/:id", controllers.UpdateInformation)
-	// router.DELETE("/informations/:id", controllers.DeleteInformation)
-	// // router.GET("/informationwp", controllers.GetInformationWordPress)
-	// router.GET("/informationByTerm/:id", controllers.GetInformationsByTerm)
+	router.GET("/informations", controllers.GetInformations)
+	router.GET("/informations/:id", controllers.GetInformation)
+	router.POST("/information", controllers.CreateInformation)
+	router.PUT("/informations/:id", controllers.UpdateInformation)
+	router.DELETE("/informations/:id", controllers.DeleteInformation)
+	// router.GET("/informationwp", controllers.GetInformationWordPress)
+	router.GET("/informationByTerm/:id", controllers.GetInformationsByTerm)
 
 	// router.GET("/users", controllers.GetUsers)
 	// router.GET("/users/:id", controllers.GetUser)
@@ -69,10 +69,10 @@ func main() {
 
 	// INTERACCIONES CON LA BASE DE DATOS DE WORDPRESS
 	router.GET("/insertServices", controllers.InsertServices)
-	// router.GET("/insertInformations", controllers.InsertInformations)
+	router.GET("/insertInformations", controllers.InsertInformations)
 	// router.GET("/insertCategories", controllers.InsertCategories)
-	router.PUT("/approveServiceWP/:id", controllers.ApproveServiceWP) //Se debe ingresar el id del wp_term (id en bd wordpress) y tambien el json con los datos del servicio de nuestra bd
-	// router.PUT("/approveInformationWP/:id", controllers.ApproveInformationWP) //Se debe ingresar el id del wp_post (id en bd wordpress) y tambien el json con los datos de la informacion de nuestra bd
+	router.PUT("/approveServiceWP/:id", controllers.ApproveServiceWP)         //Se debe ingresar el id del wp_term (id en bd wordpress) y tambien el json con los datos del servicio de nuestra bd
+	router.PUT("/approveInformationWP/:id", controllers.ApproveInformationWP) //Se debe ingresar el id del wp_post (id en bd wordpress) y tambien el json con los datos de la informacion de nuestra bd
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	//Rutas para Revisores, Administradores y SuperAdministradores (debe estar autenticado)
