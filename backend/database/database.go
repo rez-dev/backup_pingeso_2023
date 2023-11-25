@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func conexionDB() (conexion *sql.DB) {
+func ConexionDB() (conexion *sql.DB) {
 	Driver := "mysql"
 	Usuario := "root"
 	Contrasenia := "mysql"
@@ -84,7 +84,7 @@ func conexionDB() (conexion *sql.DB) {
 	return conexion
 }
 
-func conexionDBWP() (conexion *sql.DB) {
+func ConexionDBWP() (conexion *sql.DB) {
 	Driver := "mysql"
 	Usuario := "root"
 	Contrasenia := "mysql"
