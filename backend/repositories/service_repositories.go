@@ -2,11 +2,12 @@ package repositories
 
 import (
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/rez-dev/backup_pingeso_2023/backend/database"
 	"github.com/rez-dev/backup_pingeso_2023/backend/models"
 )
 
-func GetServices() (services []Service, err error) {
-	conexionEstablecida := conexionDB()
+func GetServices() (services []models.Service, err error) {
+	conexionEstablecida := database.ConexionDB()
 	if err != nil {
 		return nil, err
 	}
