@@ -71,17 +71,17 @@ func ConexionDB() (conexion *sql.DB) {
 	if err != nil {
 		panic(err.Error())
 	}
-	// _, err = conexion.Exec(`CREATE TABLE IF NOT EXISTS user (
-	// 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	// 	name VARCHAR(255) NOT NULL,
-	// 	rut VARCHAR(255) NOT NULL,
-	// 	email VARCHAR(255) NOT NULL,
-	// 	password VARCHAR(255) NOT NULL,
-	// 	role VARCHAR(255) NOT NULL,
-	// )`)
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
+	_, err = conexion.Exec(`CREATE TABLE IF NOT EXISTS user (
+		id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+		name VARCHAR(255) NOT NULL,
+		rut VARCHAR(255) NOT NULL,
+		email VARCHAR(255) NOT NULL,
+		password VARCHAR(255) NOT NULL,
+		role VARCHAR(255) NOT NULL
+	)`)
+	if err != nil {
+		panic(err.Error())
+	}
 	return conexion
 }
 
