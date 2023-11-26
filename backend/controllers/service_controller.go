@@ -167,12 +167,12 @@ func GetServicesByState(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, services)
 }
 
-// func GetUserByService(c *gin.Context) {
-// 	id := c.Param("id")
-// 	user, err := services.GetUserByService(id)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	c.IndentedJSON(http.StatusOK, user)
-// }
+func GetUserByService(c *gin.Context) {
+	id := c.Param("id")
+	name, err := services.GetUserByService(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, gin.H{"name": name})
+}

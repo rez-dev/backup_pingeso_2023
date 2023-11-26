@@ -69,7 +69,7 @@ func DeleteUser(c *gin.Context) {
 
 func GetUsersByUnity(c *gin.Context) {
 	unity := c.Param("unity")
-	role := c.Param("role")
+	role := c.Query("role")
 	users, err := services.GetUsersByUnity(unity, role)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

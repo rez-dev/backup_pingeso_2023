@@ -6,7 +6,7 @@ type User struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Rut      string `json:"rut"`
-	Email    string `gorm:"unique"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 	Role     string `json:"role"`
 	Unity    string `json:"unity"`

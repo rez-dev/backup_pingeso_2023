@@ -116,3 +116,11 @@ func GetServicesByState(state string) (models.Services, error) {
 	}
 	return services, nil
 }
+
+func GetUserByService(id string) (string, error) {
+	name, err := repositories.GetUserByService(id)
+	if err != nil {
+		return "", err
+	}
+	return name, nil
+}

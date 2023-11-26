@@ -290,19 +290,32 @@ func GetServicesByState(state string) (models.Services, error) {
 	return services, nil
 }
 
-// func GetUserByService(id string) (models.Users, error) {
-// 	conexionEstablecida := database.ConexionDB()
-// 	db := conexionDBUser() // Make sure this returns *gorm.DB
-// 	// obtener id_user de servicio con id = id
-// 	obtenerRegistros, _ := conexionEstablecida.Query("SELECT id_user FROM service WHERE id = ?", id)
-// 	var id_user int
-// 	for obtenerRegistros.Next() {
-// 		obtenerRegistros.Scan(&id_user)
-// 	}
-// 	// obtener registros que tienen el mismo nombre
-// 	var user models.User
-// 	// Use GORM's First method to find the user by ID
-// 	db.Where("id = ?", id_user).First(&user)
-// 	var name string = user.Name
-// 	c.IndentedJSON(http.StatusOK, gin.H{"name": name})
-// }
+func GetUserByService(id string) (string, error) {
+	conexionEstablecida := database.ConexionDB()
+	// obtener id_user de servicio con id = id
+	obtenerRegistros, _ := conexionEstablecida.Query("SELECT id_user FROM service WHERE id = ?", id)
+	var id_user int
+	for obtenerRegistros.Next() {
+		obtenerRegistros.Scan(&id_user)
+	}
+	// obtener registros que tienen el mismo nombre
+	obtenerRegistros, err := conexionEstablecida.Query("SELECT * FROM user WHERE id = ?", id_user)
+	if err != nil {
+		return "", err
+	}
+	user := models.User{}
+	for obtenerRegistros.Next() {
+		var id int
+		var name, rut, email, password, role, unity string
+		obtenerRegistros.Scan(&id, &name, &rut, &email, &password, &role, &unity)
+		user.ID = id
+		user.Name = name
+		user.Rut = rut
+		user.Email = email
+		user.Password = password
+		user.Role = role
+		user.Unity = unity
+	}
+	return user.Name, nil
+	// c.IndentedJSON(http.StatusOK, gin.H{"name": name})
+}

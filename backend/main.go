@@ -40,8 +40,8 @@ func main() {
 	router.GET("/countServicesByUser/:id", controllers.CountServicesByUser)
 	router.GET("/servicesByState/:state", controllers.GetServicesByState) //En la ruta se agrega el estado del servicio
 	router.PUT("/desassignService/:id", controllers.DesassignService)     // En el body se debe enviar el id del servicio
-	// router.GET("/getUserByService/:id", controllers.GetUserByService)     // En la ruta se agrega el id del servicio
-	router.PUT("/approveService/:id", controllers.ApproveService) // En la ruta se agrega el id_wp_term del servicio
+	router.GET("/getUserByService/:id", controllers.GetUserByService)     // En la ruta se agrega el id del servicio
+	router.PUT("/approveService/:id", controllers.ApproveService)         // En la ruta se agrega el id_wp_term del servicio
 
 	router.GET("/categories", controllers.GetCategories)
 	router.GET("/categories/:id", controllers.GetCategory)

@@ -107,8 +107,8 @@ func ConexionDBWP() (conexion *sql.DB) {
 	Contrasenia := "etl"
 	Nombre := "test_usachatiendebd"
 	// Cadena de conexión
-	// cadenaConexion := fmt.Sprintf("%s:%s@tcp(172.23.64.1:3333)/%s", Usuario, Contrasenia, Nombre)
 	cadenaConexion := fmt.Sprintf("%s:%s@tcp(172.23.64.1:3333)/%s", Usuario, Contrasenia, Nombre)
+	// cadenaConexion := fmt.Sprintf("%s:%s@tcp(localhost:3333)/%s", Usuario, Contrasenia, Nombre)
 	conexion, err := sql.Open(Driver, cadenaConexion)
 	if err != nil {
 		panic(err.Error())

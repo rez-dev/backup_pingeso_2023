@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -21,39 +22,42 @@ func GetUsers() (models.Users, error) {
 	users := models.Users{}
 	for obtenerRegistros.Next() {
 		var id int
-		var name, email, password, role string
-		obtenerRegistros.Scan(&id, &name, &email, &password, &role)
+		var name, rut, email, password, role, unity string
+		obtenerRegistros.Scan(&id, &name, &rut, &email, &password, &role, &unity)
 		user.ID = id
 		user.Name = name
+		user.Rut = rut
 		user.Email = email
 		user.Password = password
 		user.Role = role
+		user.Unity = unity
 		users = append(users, user)
 	}
 	return users, nil
 }
 
-func GetUser(id string) (models.Users, error) {
+func GetUser(id string) (models.User, error) {
 	conexionEstablecida := database.ConexionDB()
 	// obtener registros que tienen el mismo nombre
 	obtenerRegistros, err := conexionEstablecida.Query("SELECT * FROM user WHERE id = ?", id)
 	if err != nil {
-		return nil, err
+		return models.User{}, err
 	}
 	user := models.User{}
-	users := models.Users{}
 	for obtenerRegistros.Next() {
 		var id int
-		var name, email, password, role string
-		obtenerRegistros.Scan(&id, &name, &email, &password, &role)
+		var name, rut, email, password, role, unity string
+		obtenerRegistros.Scan(&id, &name, &rut, &email, &password, &role, &unity)
 		user.ID = id
 		user.Name = name
+		user.Rut = rut
 		user.Email = email
 		user.Password = password
 		user.Role = role
-		users = append(users, user)
+		user.Unity = unity
+		// users = append(users, user)
 	}
-	return users, nil
+	return user, nil
 }
 
 func CreateUser(user models.User) error {
@@ -63,12 +67,12 @@ func CreateUser(user models.User) error {
 	if err != nil {
 		return err
 	}
-	// Hash the password, bycryp es decifrado
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	insertarRegistros.Exec(user.Name, user.Rut, user.Email, hashedPassword, user.Role, user.Unity)
+	// // Hash the password, bycryp es decifrado
+	// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	// if err != nil {
+	// 	return err
+	// }
+	insertarRegistros.Exec(user.Name, user.Rut, user.Email, user.Password, user.Role, user.Unity)
 	return nil
 }
 
@@ -102,28 +106,33 @@ func DeleteUser(id string) error {
 
 func GetUsersByUnity(unity string, role string) (models.Users, error) {
 	conexionEstablecida := database.ConexionDB()
+	fmt.Println(unity)
+	fmt.Println(role)
+
 	// obtener registros que tienen el mismo nombre
 	obtenerRegistros, err := conexionEstablecida.Query("SELECT * FROM user WHERE unity = ? AND role = ?", unity, role)
 	if err != nil {
 		return nil, err
 	}
-	if role == "" {
-		obtenerRegistros, err = conexionEstablecida.Query("SELECT * FROM user WHERE unity = ?", unity)
-		if err != nil {
-			return nil, err
-		}
-	}
+	// if role == "" {
+	// 	obtenerRegistros, err = conexionEstablecida.Query("SELECT * FROM user WHERE unity = ?", unity)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// }
 	user := models.User{}
 	users := models.Users{}
 	for obtenerRegistros.Next() {
 		var id int
-		var name, email, password, role string
-		obtenerRegistros.Scan(&id, &name, &email, &password, &role)
+		var name, rut, email, password, role, unity string
+		obtenerRegistros.Scan(&id, &name, &rut, &email, &password, &role, &unity)
 		user.ID = id
 		user.Name = name
+		user.Rut = rut
 		user.Email = email
 		user.Password = password
 		user.Role = role
+		user.Unity = unity
 		users = append(users, user)
 	}
 	return users, nil
@@ -140,13 +149,15 @@ func GetUserByRole(role string) (models.Users, error) {
 	users := models.Users{}
 	for obtenerRegistros.Next() {
 		var id int
-		var name, email, password, role string
-		obtenerRegistros.Scan(&id, &name, &email, &password, &role)
+		var name, rut, email, password, role, unity string
+		obtenerRegistros.Scan(&id, &name, &rut, &email, &password, &role, &unity)
 		user.ID = id
 		user.Name = name
+		user.Rut = rut
 		user.Email = email
 		user.Password = password
 		user.Role = role
+		user.Unity = unity
 		users = append(users, user)
 	}
 	return users, nil

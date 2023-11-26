@@ -13,12 +13,12 @@ func GetUsers() (models.Users, error) {
 	return users, nil
 }
 
-func GetUser(id string) (models.Users, error) {
-	users, err := repositories.GetUser(id)
+func GetUser(id string) (models.User, error) {
+	user, err := repositories.GetUser(id)
 	if err != nil {
-		return nil, err
+		return models.User{}, err
 	}
-	return users, nil
+	return user, nil
 }
 
 func CreateUser(user models.User) error {
