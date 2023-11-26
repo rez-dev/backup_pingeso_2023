@@ -103,8 +103,8 @@ func Signup(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	var loginReq struct {
-		Email    string
-		Password string
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 	if err := c.BindJSON(&loginReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

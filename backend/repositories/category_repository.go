@@ -121,10 +121,49 @@ func GetParentsWordPress(id int) ([3]string, error) {
 	return datos, nil
 }
 
-// Funcion que obtiene las categorias de los servicios de WordPress y las inserta en la base de datos del middleware
+// // Funcion que obtiene las categorias de los servicios de WordPress y las inserta en la base de datos del middleware
+// func InsertCategories() (models.Categories, error) {
+// 	conexionEstablecida := database.ConexionDBWP()
+// 	// obtener registros que tienen el mismo nombre
+// 	obtenerRegistros, err := conexionEstablecida.Query("SELECT wp_terms.term_id as term_id FROM wp_terms INNER JOIN wp_term_taxonomy ON wp_terms.term_id = wp_term_taxonomy.term_id WHERE taxonomy = 'category' AND LENGTH(description) > 0")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	var terms []int
+// 	for obtenerRegistros.Next() {
+// 		var term_id int
+// 		obtenerRegistros.Scan(&term_id)
+// 		terms = append(terms, term_id)
+// 	}
+// 	category := models.Category{}
+// 	categories := models.Categories{}
+// 	var padres [3]string
+// 	for i := 0; i < len(terms); i++ {
+// 		padres, err = GetParentsWordPress(terms[i])
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		category.Level1 = padres[0]
+// 		category.Level2 = padres[1]
+// 		category.Level3 = padres[2]
+// 		category.Id_wp_term = terms[i]
+// 		categories = append(categories, category)
+// 		// fmt.Println(padres)
+// 	}
+
+// 	conexionEstablecida2 := database.ConexionDB()
+// 	insertarRegistros, err := conexionEstablecida2.Prepare("INSERT INTO category(level1, level2, level3, id_wp_term) VALUES(?,?,?,?)")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	for _, category := range categories {
+// 		insertarRegistros.Exec(category.Level1, category.Level2, category.Level3, category.Id_wp_term)
+// 	}
+// 	return categories, nil
+// }
+
 func InsertCategories() (models.Categories, error) {
 	conexionEstablecida := database.ConexionDBWP()
-	// obtener registros que tienen el mismo nombre
 	obtenerRegistros, err := conexionEstablecida.Query("SELECT wp_terms.term_id as term_id FROM wp_terms INNER JOIN wp_term_taxonomy ON wp_terms.term_id = wp_term_taxonomy.term_id WHERE taxonomy = 'category' AND LENGTH(description) > 0")
 	if err != nil {
 		return nil, err
@@ -147,8 +186,11 @@ func InsertCategories() (models.Categories, error) {
 		category.Level2 = padres[1]
 		category.Level3 = padres[2]
 		category.Id_wp_term = terms[i]
-		categories = append(categories, category)
-		// fmt.Println(padres)
+
+		// Verificar si el registro ya existe en la base de datos
+		if !categoryExists(category.Id_wp_term) {
+			categories = append(categories, category)
+		}
 	}
 
 	conexionEstablecida2 := database.ConexionDB()
@@ -157,9 +199,23 @@ func InsertCategories() (models.Categories, error) {
 		return nil, err
 	}
 	for _, category := range categories {
-		insertarRegistros.Exec(category.Level1, category.Level2, category.Level3, category.Id_wp_term)
+		_, err := insertarRegistros.Exec(category.Level1, category.Level2, category.Level3, category.Id_wp_term)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return categories, nil
+}
+
+// Función para verificar si la categoría ya existe en la base de datos
+func categoryExists(id int) bool {
+	conexionEstablecida := database.ConexionDB()
+	var count int
+	err := conexionEstablecida.QueryRow("SELECT COUNT(*) FROM category WHERE id_wp_term = ?", id).Scan(&count)
+	if err != nil {
+		return false
+	}
+	return count > 0
 }
 
 func GetCategoriesByTerm(id string) (models.Categories, error) {

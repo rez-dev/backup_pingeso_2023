@@ -121,19 +121,55 @@ func GetInformationWordPress() models.Informations {
 	return informations
 }
 
-// Funcion que obtiene las informaciones limpias de WordPress y las inserta en la base de datos del Middleware
+// // Funcion que obtiene las informaciones limpias de WordPress y las inserta en la base de datos del Middleware
+// func InsertInformations() (models.Informations, error) {
+// 	conexionEstablecida := database.ConexionDB()
+// 	informations := GetInformationWordPress()
+// 	// insertar datos
+// 	for _, information := range informations {
+// 		insertarDatos, err := conexionEstablecida.Prepare("INSERT INTO information(title, content, position, author, id_wp_post, id_post_meta, id_author, id_wp_term) VALUES(?,?,?,?,?,?,?,?)")
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		insertarDatos.Exec(information.Title, information.Content, information.Position, information.Author, information.Id_wp_post, information.Id_post_meta, information.Id_author, information.Id_wp_term)
+// 	}
+// 	return informations, nil
+// }
+
+// Función que obtiene las informaciones limpias de WordPress y las inserta en la base de datos del Middleware
 func InsertInformations() (models.Informations, error) {
 	conexionEstablecida := database.ConexionDB()
 	informations := GetInformationWordPress()
-	// insertar datos
+	insertedInformation := models.Informations{} // Lista para almacenar las informaciones insertadas
+
+	// Iterar sobre la información obtenida
 	for _, information := range informations {
-		insertarDatos, err := conexionEstablecida.Prepare("INSERT INTO information(title, content, position, author, id_wp_post, id_post_meta, id_author, id_wp_term) VALUES(?,?,?,?,?,?,?,?)")
-		if err != nil {
-			return nil, err
+		// Verificar si la información ya existe en la base de datos
+		if !informationExists(information.Id_wp_post) {
+			// Insertar la información si no existe
+			insertarDatos, err := conexionEstablecida.Prepare("INSERT INTO information(title, content, position, author, id_wp_post, id_post_meta, id_author, id_wp_term) VALUES(?,?,?,?,?,?,?,?)")
+			if err != nil {
+				return nil, err
+			}
+			_, err = insertarDatos.Exec(information.Title, information.Content, information.Position, information.Author, information.Id_wp_post, information.Id_post_meta, information.Id_author, information.Id_wp_term)
+			if err != nil {
+				return nil, err
+			}
+			insertedInformation = append(insertedInformation, information)
 		}
-		insertarDatos.Exec(information.Title, information.Content, information.Position, information.Author, information.Id_wp_post, information.Id_post_meta, information.Id_author, information.Id_wp_term)
 	}
-	return informations, nil
+	return insertedInformation, nil
+}
+
+// Función para verificar si la información ya existe en la base de datos
+func informationExists(id int) bool {
+	conexionEstablecida := database.ConexionDB()
+	var count int
+	err := conexionEstablecida.QueryRow("SELECT COUNT(*) FROM information WHERE id_wp_post = ?", id).Scan(&count)
+	if err != nil {
+		return false
+	}
+	return count > 0
 }
 
 // Funcion que obtiene todas las informaciones de UN servicio y la entrega en formato json

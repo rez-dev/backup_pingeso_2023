@@ -59,11 +59,16 @@ func GetUser(id string) (models.Users, error) {
 func CreateUser(user models.User) error {
 	conexionEstablecida := database.ConexionDB()
 	// obtener registros que tienen el mismo nombre
-	insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO user (name, email, password, role) VALUES(?,?,?,?)")
+	insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO user (name, rut, email, password, role, unity) VALUES(?,?,?,?,?,?)")
 	if err != nil {
 		return err
 	}
-	insertarRegistros.Exec(user.Name, user.Email, user.Password, user.Role)
+	// Hash the password, bycryp es decifrado
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	insertarRegistros.Exec(user.Name, user.Rut, user.Email, hashedPassword, user.Role, user.Unity)
 	return nil
 }
 
@@ -164,13 +169,19 @@ func Signup(user models.User) error {
 	signupReq.Role = user.Role
 	signupReq.Unity = user.Unity
 
+	// Hash the password, bycryp es decifrado
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signupReq.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
 	conexionEstablecida := database.ConexionDB()
 	// obtener registros que tienen el mismo nombre
 	insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO user (name, rut, email, password, role, unity) VALUES(?,?,?,?,?,?)")
 	if err != nil {
 		return err
 	}
-	insertarRegistros.Exec(signupReq.Name, signupReq.Rut, signupReq.Email, signupReq.Password, signupReq.Role, signupReq.Unity)
+	insertarRegistros.Exec(signupReq.Name, signupReq.Rut, signupReq.Email, hashedPassword, signupReq.Role, signupReq.Unity)
 	return nil
 }
 

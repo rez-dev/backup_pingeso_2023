@@ -118,22 +118,63 @@ func GetServicesWordPress() (models.Services, error) {
 	return services, nil
 }
 
-// Funcion que recibe los servicios limpios y los ingresa en la base de datos del middleware
+// // Funcion que recibe los servicios limpios y los ingresa en la base de datos del middleware
+// func InsertServices() (models.Services, error) {
+// 	services, err := GetServicesWordPress()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	conexionEstablecida := database.ConexionDB()
+// 	// insertar registros
+// 	insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO service(name, description, state, id_user, id_wp_term, last_approval) VALUES(?,?,?,?,?,?)")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	for _, service := range services {
+// 		insertarRegistros.Exec(service.Name, service.Description, service.State, service.Id_user, service.Id_wp_term, service.Last_approval)
+// 	}
+// 	return services, nil
+// }
+
+// Función que recibe los servicios limpios y los ingresa en la base de datos del middleware
 func InsertServices() (models.Services, error) {
 	services, err := GetServicesWordPress()
 	if err != nil {
 		return nil, err
 	}
 	conexionEstablecida := database.ConexionDB()
+
 	// insertar registros
 	insertarRegistros, err := conexionEstablecida.Prepare("INSERT INTO service(name, description, state, id_user, id_wp_term, last_approval) VALUES(?,?,?,?,?,?)")
 	if err != nil {
 		return nil, err
 	}
+	insertedServices := models.Services{} // Lista para almacenar los servicios insertados
+
 	for _, service := range services {
-		insertarRegistros.Exec(service.Name, service.Description, service.State, service.Id_user, service.Id_wp_term, service.Last_approval)
+		// Verificar si el servicio ya existe en la base de datos
+		if !serviceExists(service.Id_wp_term) {
+			// Insertar el servicio si no existe
+			_, err := insertarRegistros.Exec(service.Name, service.Description, service.State, service.Id_user, service.Id_wp_term, service.Last_approval)
+			if err != nil {
+				return nil, err
+			}
+			insertedServices = append(insertedServices, service)
+		}
 	}
-	return services, nil
+
+	return insertedServices, nil
+}
+
+// Función para verificar si el servicio ya existe en la base de datos
+func serviceExists(id int) bool {
+	conexionEstablecida := database.ConexionDB()
+	var count int
+	err := conexionEstablecida.QueryRow("SELECT COUNT(*) FROM service WHERE id_wp_term = ?", id).Scan(&count)
+	if err != nil {
+		return false
+	}
+	return count > 0
 }
 
 func ApproveServiceWP(id string, newService models.Service) error {

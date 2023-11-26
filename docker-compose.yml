@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: "test_db"
+    build:
+      context: ./backend
+      dockerfile: db.Dockerfile
+    networks:
+      - default
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysql"
+      MYSQL_DATABASE: "bd_test1"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  api:
+    container_name: "test_api"
+    build:
+      context: ./backend
+      dockerfile: api.Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  front:
+    container_name: "test_front"
+    build:
+      context: ./frontend
+      dockerfile: front.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+
+networks:
+  default:
+
+volumes:
+  mysql_data:

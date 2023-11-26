@@ -15,7 +15,7 @@ func ConexionDB() (conexion *sql.DB) {
 	// Tipo_conexion := "127.0.0.1"
 
 	// Cadena de conexión
-	cadenaConexion := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/", Usuario, Contrasenia)
+	cadenaConexion := fmt.Sprintf("%s:%s@tcp(db:3306)/", Usuario, Contrasenia)
 
 	conexion, err := sql.Open(Driver, cadenaConexion)
 
@@ -103,11 +103,12 @@ func ConexionDB() (conexion *sql.DB) {
 
 func ConexionDBWP() (conexion *sql.DB) {
 	Driver := "mysql"
-	Usuario := "root"
-	Contrasenia := ""
+	Usuario := "etl"
+	Contrasenia := "etl"
 	Nombre := "test_usachatiendebd"
 	// Cadena de conexión
-	cadenaConexion := fmt.Sprintf("%s:%s@tcp(localhost:3333)/%s", Usuario, Contrasenia, Nombre)
+	// cadenaConexion := fmt.Sprintf("%s:%s@tcp(172.23.64.1:3333)/%s", Usuario, Contrasenia, Nombre)
+	cadenaConexion := fmt.Sprintf("%s:%s@tcp(172.23.64.1:3333)/%s", Usuario, Contrasenia, Nombre)
 	conexion, err := sql.Open(Driver, cadenaConexion)
 	if err != nil {
 		panic(err.Error())
