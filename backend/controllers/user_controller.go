@@ -13,58 +13,58 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-	services, err := services.GetServices()
+	users, err := services.GetUsers()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, services)
+	c.IndentedJSON(http.StatusOK, users)
 }
 
 func GetUser(c *gin.Context) {
 	id := c.Param("id")
-	service, err := services.GetService(id)
+	user, err := services.GetUser(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, service)
+	c.IndentedJSON(http.StatusOK, user)
 }
 
 func CreateUser(c *gin.Context) {
-	var newService models.Service
-	if err := c.BindJSON(&newService); err != nil {
+	var newUser models.User
+	if err := c.BindJSON(&newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := services.CreateService(newService); err != nil {
+	if err := services.CreateUser(newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusCreated, newService)
+	c.IndentedJSON(http.StatusCreated, newUser)
 }
 
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
-	var newService models.Service
-	if err := c.BindJSON(&newService); err != nil {
+	var newUser models.User
+	if err := c.BindJSON(&newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := services.UpdateService(id, newService); err != nil {
+	if err := services.UpdateUser(id, newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, newService)
+	c.IndentedJSON(http.StatusOK, newUser)
 }
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	if err := services.DeleteService(id); err != nil {
+	if err := services.DeleteUser(id); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, gin.H{"message": "Service deleted"})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "User deleted"})
 }
 
 func GetUsersByUnity(c *gin.Context) {
@@ -78,7 +78,7 @@ func GetUsersByUnity(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, users)
 }
 
-func GetUserByRole(c *gin.Context) {
+func GetUsersByRole(c *gin.Context) {
 	role := c.Param("role")
 	users, err := services.GetUserByRole(role)
 	if err != nil {

@@ -77,7 +77,8 @@ func ConexionDB() (conexion *sql.DB) {
 		rut VARCHAR(255) NOT NULL,
 		email VARCHAR(255) NOT NULL,
 		password VARCHAR(255) NOT NULL,
-		role VARCHAR(255) NOT NULL
+		role VARCHAR(255) NOT NULL,
+		unity VARCHAR(255) NOT NULL
 	)`)
 	if err != nil {
 		panic(err.Error())

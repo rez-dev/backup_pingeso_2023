@@ -20,8 +20,8 @@ func main() {
 
 	router.Use(cors.New(config))
 
-	// router.POST("/signup", controllers.Signup)
-	// router.POST("/login", controllers.Login)
+	router.POST("/signup", controllers.Signup)
+	router.POST("/login", controllers.Login)
 	// router.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
 	// el usuario logeado pueda
@@ -58,13 +58,13 @@ func main() {
 	// router.GET("/informationwp", controllers.GetInformationWordPress)
 	router.GET("/informationByTerm/:id", controllers.GetInformationsByTerm)
 
-	// router.GET("/users", controllers.GetUsers)
-	// router.GET("/users/:id", controllers.GetUser)
-	// router.POST("/user", controllers.CreateUser)
-	// router.PUT("/users/:id", controllers.UpdateUser)
-	// router.DELETE("/users/:id", controllers.DeleteUser)
-	// router.GET("/usersByUnity/:unity", controllers.GetUsersByUnity) // parametro role queda opcional y llamas a la ruta como localhost:8080/usersByUnity/VRAE?role=revisor sino localhost:8080/usersByUnity/VRAE
-	// router.GET("/usersByRole/:role", controllers.GetUsersByRole)
+	router.GET("/users", controllers.GetUsers)
+	router.GET("/users/:id", controllers.GetUser)
+	router.POST("/user", controllers.CreateUser)
+	router.PUT("/users/:id", controllers.UpdateUser)
+	router.DELETE("/users/:id", controllers.DeleteUser)
+	router.GET("/usersByUnity/:unity", controllers.GetUsersByUnity) // parametro role queda opcional y llamas a la ruta como localhost:8080/usersByUnity/VRAE?role=revisor sino localhost:8080/usersByUnity/VRAE
+	router.GET("/usersByRole/:role", controllers.GetUsersByRole)
 	// router.GET("/parent/:id", controllers.GetParentWordPress)
 
 	// INTERACCIONES CON LA BASE DE DATOS DE WORDPRESS
